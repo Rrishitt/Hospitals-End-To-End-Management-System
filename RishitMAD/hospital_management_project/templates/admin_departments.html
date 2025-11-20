@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Manage Departments{% endblock %}
+{% block content %}
+<div class="dashboard-card">
+    <div class="card-header">Add New Department</div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="input-group">
+                <input type="text" name="name" class="form-control" placeholder="Department Name" required>
+                <input type="text" name="description" class="form-control" placeholder="Description">
+                <button type="submit" class="btn btn-primary">Add Department</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="dashboard-card">
+    <div class="card-header">Existing Departments</div>
+    <div class="card-body">
+        <ul class="list-group">
+            {% for dept in departments %}
+            <li class="list-group-item">{{ dept.name }} - {{ dept.description or 'No description' }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

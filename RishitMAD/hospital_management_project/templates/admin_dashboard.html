@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Welcome Admin</h2>
+
+<!-- Search Form -->
+<div class="dashboard-card">
+    <div class="card-body">
+        <form action="{{ url_for('admin.search') }}" method="GET">
+            <div class="input-group">
+                <input type="search" name="q" class="form-control" placeholder="Search for doctor, patient, department...">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Left Column -->
+    <div class="col-md-7">
+        <!-- Registered Doctors Card -->
+        <div class="dashboard-card">
+            <div class="card-header">Registered Doctors</div>
+            <div class="card-body">
+                {% for doctor in doctors %}
+                <div class="admin-list-item">
+                    <span>Dr. {{ doctor.name }}</span>
+                    <div>
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editDoctorModal{{ doctor.id }}">edit</button>
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal{{ doctor.id }}">delete</button>
+                        <a href="{{ url_for('admin.blacklist_user', user_id=doctor.user_id) }}" class="btn btn-dark btn-sm">blacklist</a>
+                    </div>
+                </div>
+                <!-- Modals for this doctor -->
+                {% include 'modals/admin_edit_doctor_modal.html' %}
+                {% with item_id=doctor.id, delete_url=url_for('admin.delete_doctor', doctor_id=doctor.id) %}{% include 'modals/delete_confirm_modal.html' %}{% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Registered Patients Card -->
+        <div class="dashboard-card">
+            <div class="card-header">Registered Patients</div>
+            <div class="card-body">
+                {% for patient in patients %}
+                <div class="admin-list-item">
+                    <span>{{ patient.name }}</span>
+                    <div>
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPatientModal{{ patient.id }}">edit</button>
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal{{ patient.id }}">delete</button>
+                        <a href="{{ url_for('admin.blacklist_user', user_id=patient.user_id) }}" class="btn btn-dark btn-sm">blacklist</a>
+                    </div>
+                </div>
+                <!-- Modals for this patient -->
+                {% include 'modals/admin_edit_patient_modal.html' %}
+                {% with item_id=patient.id, delete_url=url_for('admin.delete_patient', patient_id=patient.id) %}{% include 'modals/delete_confirm_modal.html' %}{% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-md-5">
+        <!-- Add a new Doctor Card -->
+        <div class="dashboard-card">
+            <div class="card-header">Add a new Doctor</div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.add_doctor') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Fullname</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Specialization/Department</label>
+                        <select name="specialization_id" class="form-select" required><option selected disabled value="">Choose...</option>{% for dept in departments %}<option value="{{ dept.id }}">{{ dept.name }}</option>{% endfor %}</select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Experience (years)</label>
+                        <input type="number" name="experience" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Appointments Card (Full Width) -->
+<div class="dashboard-card">
+    <div class="card-header">Upcoming Appointments</div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead><tr><th>Sr No.</th><th>Patient Name</th><th>Doctor Name</th><th>Department</th><th>Patient History</th></tr></thead>
+            <tbody>
+                {% for app in appointments %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ app.patient.name }}</td>
+                    <td>{{ app.doctor.name }}</td>
+                    <td>{{ app.doctor.specialization.name }}</td>
+                    <td><a href="{{ url_for('admin.view_patient_history', patient_id=app.patient_id) }}" class="btn btn-outline-info btn-sm">view</a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center">No appointments found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

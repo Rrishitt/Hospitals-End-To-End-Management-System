@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Hospital Analytics{% endblock %}
+{% block content %}
+<h2 class="mb-4">Hospital Analytics Dashboard</h2>
+
+<!-- Plotly.js library -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<!--
+    ==================================================================
+    Chart 1: Total Appointments per Department
+    ==================================================================
+-->
+<div class="dashboard-card mb-4">
+    <div id="chart1" class="card-body shadow-sm" style="min-height: 400px;">
+        <p class="text-center text-muted">Loading graph...</p>
+    </div>
+</div>
+
+<!--
+    ==================================================================
+    Chart 2: Appointment Status Distribution
+    ==================================================================
+-->
+<div class="dashboard-card mb-4">
+    <div id="chart2" class="card-body shadow-sm" style="min-height: 400px;">
+        <p class="text-center text-muted">Loading graph...</p>
+    </div>
+</div>
+
+<!--
+    ==================================================================
+    Chart 3: Appointments Volume Over Time
+    ==================================================================
+-->
+<div class="dashboard-card mb-4">
+    <div id="chart3" class="card-body shadow-sm" style="min-height: 400px;">
+        <p class="text-center text-muted">Loading graph...</p>
+    </div>
+</div>
+
+<!--
+    ==================================================================
+    Chart 4: Busiest Doctors (by Unique Patients)
+    ==================================================================
+-->
+<div class="dashboard-card mb-4">
+    <div id="chart4" class="card-body shadow-sm" style="min-height: 400px;">
+        <p class="text-center text-muted">Loading graph...</p>
+    </div>
+</div>
+
+<!--
+    ==================================================================
+    Chart 5: Doctor Distribution by Department
+    ==================================================================
+-->
+<div class="dashboard-card mb-4">
+    <div id="chart5" class="card-body shadow-sm" style="min-height: 400px;">
+        <p class="text-center text-muted">Loading graph...</p>
+    </div>
+</div>
+
+
+<!--
+    ==================================================================
+    JavaScript to Render the Plots
+    ==================================================================
+-->
+<script>
+    // ** THE FIX IS HERE **
+    // We wrap the entire plotting logic in an event listener.
+    // This ensures the code only runs after the full HTML page is ready.
+    document.addEventListener('DOMContentLoaded', function() {
+    
+        function renderPlot(chartId, plotJson) {
+            const chartDiv = document.getElementById(chartId);
+            
+            try {
+                const plotData = JSON.parse(plotJson);
+
+                if (Object.keys(plotData).length === 0) {
+                     chartDiv.innerHTML = '<p class="text-center text-muted">No data available to display for this chart.</p>';
+                     return;
+                }
+                
+                if (plotData && plotData.data && plotData.layout) {
+                    // Setting responsive to true and removing the Plotly logo
+                    var config = {responsive: true, displaylogo: false};
+                    Plotly.newPlot(chartDiv, plotData.data, plotData.layout, config);
+                } else {
+                    chartDiv.innerHTML = '<p class="text-center text-danger">Error: Invalid graph data format.</p>';
+                }
+            } catch (e) {
+                console.error('Error rendering plot for:', chartId, e);
+                chartDiv.innerHTML = '<p class="text-center text-danger">Error: Could not load graph data.</p>';
+            }
+        }
+
+        // Now, call the functions to render each plot
+        renderPlot('chart1', '{{ plot1 | safe }}');
+        renderPlot('chart2', '{{ plot2 | safe }}');
+        renderPlot('chart3', '{{ plot3 | safe }}');
+        renderPlot('chart4', '{{ plot4 | safe }}');
+        renderPlot('chart5', '{{ plot5 | safe }}');
+    });
+</script>
+{% endblock %}

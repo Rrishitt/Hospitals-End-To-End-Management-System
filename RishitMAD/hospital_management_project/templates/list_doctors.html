@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Doctors in {{ department.name }}{% endblock %}
+{% block content %}
+<h2>Department of {{ department.name }}</h2>
+
+<!-- Display Department Overview -->
+{% if department.description %}
+<div class="alert alert-secondary my-3">
+    <strong>Overview:</strong> {{ department.description }}
+</div>
+{% endif %}
+
+<h3 class="mt-4">Our Doctors</h3>
+{% if doctors %}
+    {% for doctor in doctors %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Dr. {{ doctor.name }}</h5>
+            <p class="card-text">{{ doctor.specialization.name }} | {{ doctor.experience or 'N/A' }} years experience</p>
+            <a href="{{ url_for('patient.doctor_profile', doctor_id=doctor.id) }}" class="btn btn-info btn-sm">View Details</a>
+            <a href="{{ url_for('patient.doctor_availability', doctor_id=doctor.id) }}" class="btn btn-success btn-sm">Check Availability</a>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>There are currently no doctors listed for this department.</p>
+{% endif %}
+{% endblock %}

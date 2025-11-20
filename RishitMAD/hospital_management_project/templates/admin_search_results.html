@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+
+<h3 class="mt-4">Departments Found</h3>
+{% if departments %}
+    <ul class="list-group">
+        {% for dept in departments %}<li class="list-group-item">{{ dept.name }}</li>{% endfor %}
+    </ul>
+{% else %}
+    <p>No departments found.</p>
+{% endif %}
+
+<h3 class="mt-4">Doctors Found</h3>
+{% if doctors %}
+    <ul class="list-group">
+        {% for doctor in doctors %}<li class="list-group-item">{{ doctor.name }} - {{ doctor.specialization.name }}</li>{% endfor %}
+    </ul>
+{% else %}
+    <p>No doctors found.</p>
+{% endif %}
+
+<h3 class="mt-4">Patients Found</h3>
+{% if patients %}
+    <ul class="list-group">
+        {% for patient in patients %}<li class="list-group-item">{{ patient.name }} - {{ patient.contact }}</li>{% endfor %}
+    </ul>
+{% else %}
+    <p>No patients found.</p>
+{% endif %}
+
+<a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+{% endblock %}

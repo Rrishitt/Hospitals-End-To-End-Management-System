@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}My Appointments{% endblock %}
+{% block content %}
+    <h2>My Appointments</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Sr. No.</th>
+                <th>Doctor</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in appointments %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>Dr. {{ app.doctor.name }}</td>
+                <td>{{ app.date.strftime('%d/%m/%Y') }} at {{ app.time.strftime('%I:%M %p') }}</td>
+                <td><span class="badge bg-{{ 'success' if app.status == 'Booked' else 'secondary' }}">{{ app.status }}</span></td>
+                <td>
+                    {% if app.status == 'Booked' %}
+                    <a href="{{ url_for('patient.cancel_appointment', appointment_id=app.id) }}" class="btn btn-danger btn-sm">Cancel</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center">You have no appointments.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

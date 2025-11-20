@@ -1,0 +1,12 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Login
+Werkzeug
+Flask-WTF
+pandas
+plotly
+graphviz
+pandas
+plotly
+graphviz

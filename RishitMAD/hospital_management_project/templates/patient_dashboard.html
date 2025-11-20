@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Patient Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Welcome {{ current_user.patient.name }}</h2>
+
+<!-- Search Form -->
+<div class="dashboard-card mb-4">
+    <div class="card-body">
+        <form action="{{ url_for('patient.dashboard') }}" method="GET">
+            <div class="input-group">
+                <input type="search" name="q" class="form-control" placeholder="Search by Doctor or Department..." value="{{ query or '' }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Search Results -->
+{% if query %}
+    <div class="dashboard-card mb-4">
+        <div class="card-header">Search Results for "{{ query }}"</div>
+        <div class="card-body">
+        {% if matched_doctors %}
+            <div class="list-group">
+            {% for doctor in matched_doctors %}
+                <a href="{{ url_for('patient.doctor_profile', doctor_id=doctor.id) }}" class="list-group-item list-group-item-action">
+                    <strong>Dr. {{ doctor.name }}</strong><br>
+                    <small>{{ doctor.specialization.name }}</small>
+                </a>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p>No doctors or departments found matching your search.</p>
+        {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+<!-- Departments Card -->
+<div class="dashboard-card mb-4">
+    <div class="card-header">All Departments</div>
+    <div class="card-body">
+        <div class="list-group">
+            {% for dept in departments %}
+            <a href="{{ url_for('patient.list_doctors', department_id=dept.id) }}" class="list-group-item list-group-item-action">{{ dept.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Dr. {{ doctor.name }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h2>Doctor Profile</h2></div>
+    <div class="card-body">
+        <h3 class="card-title">Dr. {{ doctor.name }}</h3>
+        <p class="card-text"><strong>Specialization:</strong> {{ doctor.specialization.name }}</p>
+        <p class="card-text"><strong>Qualifications:</strong> {{ doctor.qualifications or 'N/A' }}</p>
+        <p class="card-text"><strong>Experience:</strong> {{ doctor.experience or 'N/A' }} years</p>
+        <a href="{{ url_for('patient.doctor_availability', doctor_id=doctor.id) }}" class="btn btn-primary">Check Availability & Book</a>
+        <a href="{{ url_for('patient.list_doctors', department_id=doctor.specialization_id) }}" class="btn btn-secondary">Back to Doctors</a>
+    </div>
+</div>
+{% endblock %}

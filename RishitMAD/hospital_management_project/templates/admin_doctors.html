@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Manage Doctors{% endblock %}
+{% block content %}
+    <h2>Manage Doctors</h2>
+    <form method="POST" action="{{ url_for('admin.add_doctor') }}">
+        <h3>Add New Doctor</h3>
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3"><input type="text" name="name" class="form-control" placeholder="Full Name" required></div>
+            <div class="col-md-2"><input type="text" name="username" class="form-control" placeholder="Username" required></div>
+            <div class="col-md-2"><input type="password" name="password" class="form-control" placeholder="Password" required></div>
+            <div class="col-md-2">
+                <select name="specialization_id" class="form-select" required>
+                    <option selected disabled value="">Specialization...</option>
+                    {% for dept in departments %}<option value="{{ dept.id }}">{{ dept.name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2"><input type="number" name="experience" class="form-control" placeholder="Experience (Yrs)"></div>
+            <div class="col-md-1"><button type="submit" class="btn btn-success w-100">Add</button></div>
+        </div>
+    </form>
+    <hr>
+    <h3>Existing Doctors</h3>
+    <table class="table table-striped">
+        <thead><tr><th>Name</th><th>Specialization</th><th>Experience</th><th>Actions</th></tr></thead>
+        <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor.name }}</td>
+                <td>{{ doctor.specialization.name }}</td>
+                <td>{{ doctor.experience or 'N/A' }} yrs</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editDoctorModal{{ doctor.id }}">Edit</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal{{ doctor.id }}">Delete</button>
+                    {% set user = doctor.user %}
+                    <!-- FIX #1: Corrected url_for call -->
+                    <a href="{{ url_for('admin.blacklist_user', user_id=user.id) }}" class="btn btn-dark btn-sm">
+                        {% if user.is_blacklisted %}Un-Blacklist{% else %}Blacklist{% endif %}
+                    </a>
+                </td>
+            </tr>
+            <div class="modal fade" id="editDoctorModal{{ doctor.id }}"><div class="modal-dialog"><div class="modal-content">
+                <form method="POST" action="{{ url_for('admin.edit_doctor', doctor_id=doctor.id) }}">
+                    <div class="modal-header"><h5 class="modal-title">Edit Doctor</h5></div>
+                    <div class="modal-body">
+                        <input type="text" name="name" class="form-control mb-2" value="{{ doctor.name }}">
+                        <select name="specialization_id" class="form-control" required>{% for dept in departments %}<option value="{{ dept.id }}" {% if dept.id == doctor.specialization_id %}selected{% endif %}>{{ dept.name }}</option>{% endfor %}</select>
+                        <input type="number" name="experience" class="form-control mt-2" placeholder="Experience (Yrs)" value="{{ doctor.experience or '' }}">
+                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-primary">Save Changes</button></div>
+                </form>
+            </div></div></div>
+            {% with item_id=doctor.id, delete_url=url_for('admin.delete_doctor', doctor_id=doctor.id) %}{% include 'modals/delete_confirm_modal.html' %}{% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

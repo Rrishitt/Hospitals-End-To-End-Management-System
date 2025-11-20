@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Doctor Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Welcome Dr. {{ current_user.doctor.name }}</h2>
+<div class="row">
+    <div class="col-md-8">
+        <!-- Upcoming Appointments Card -->
+        <div class="dashboard-card">
+            <div class="card-header">Today's Appointments</div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead><tr><th>Patient Name</th><th>Time</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ appointment.patient.name }}</td>
+                            <td>{{ appointment.time.strftime('%I:%M %p') }}</td>
+                            <td>
+                                <a href="{{ url_for('doctor.update_patient_history', appointment_id=appointment.id) }}" class="btn btn-primary btn-sm">Update</a>
+                                <a href="{{ url_for('doctor.patient_history', patient_id=appointment.patient.id) }}" class="btn btn-info btn-sm">History</a>
+                                {% if appointment.status == 'Booked' %}
+                                    <a href="{{ url_for('doctor.cancel_appointment', appointment_id=appointment.id) }}" class="btn btn-danger btn-sm">Cancel</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3" class="text-center">No appointments scheduled for today.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <!-- Assigned Patients Card -->
+        <div class="dashboard-card">
+            <div class="card-header">Assigned Patients</div>
+            <div class="card-body">
+                {% if assigned_patients %}
+                    <div class="list-group">
+                        {% for patient in assigned_patients %}
+                        <a href="{{ url_for('doctor.patient_history', patient_id=patient.id) }}" class="list-group-item list-group-item-action">
+                            {{ patient.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>You have no assigned patients yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

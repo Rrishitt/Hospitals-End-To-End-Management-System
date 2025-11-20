@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+    <h2>Patient Registration</h2>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <!-- Render each field and its errors -->
+        <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+            {% if form.name.errors %}<div class="invalid-feedback d-block">{{ form.name.errors[0] }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.contact.label(class="form-label") }}
+            {{ form.contact(class="form-control") }}
+             {% if form.contact.errors %}<div class="invalid-feedback d-block">{{ form.contact.errors[0] }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control") }}
+            {% if form.username.errors %}<div class="invalid-feedback d-block">{{ form.username.errors[0] }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% if form.password.errors %}<div class="invalid-feedback d-block">{{ form.password.errors[0] }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.confirm_password.label(class="form-label") }}
+            {{ form.confirm_password(class="form-control") }}
+            {% if form.confirm_password.errors %}<div class="invalid-feedback d-block">{{ form.confirm_password.errors[0] }}</div>{% endif %}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+{% endblock %}

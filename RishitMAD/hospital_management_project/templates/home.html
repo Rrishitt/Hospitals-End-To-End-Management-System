@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Welcome to HMS{% endblock %}
+{% block content %}
+<div class="container text-center py-5">
+    <h1 class="display-4">Hospital Management System</h1>
+    <p class="lead">Your unified platform for efficient healthcare management.</p>
+    <hr class="my-4">
+    <p>Seamlessly connect patients, doctors, and administrators.</p>
+    <p class="lead">
+        <a class="btn btn-primary btn-lg mx-2" href="{{ url_for('auth.login') }}" role="button">Login</a>
+        <a class="btn btn-success btn-lg mx-2" href="{{ url_for('auth.signup') }}" role="button">Register as a Patient</a>
+    </p>
+</div>
+{% endblock %}

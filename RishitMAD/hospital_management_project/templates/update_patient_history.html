@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Update Patient History{% endblock %}
+{% block content %}
+<h2>Update History for {{ appointment.patient.name }}</h2>
+<h5>Appointment on {{ appointment.date.strftime('%d/%m/%Y') }}</h5>
+<form method="POST">
+    <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Visit Type</label><input type="text" name="visit_type" class="form-control" value="{{ treatment.visit_type if treatment }}"></div>
+        <div class="col-md-6 mb-3"><label class="form-label">Tests Done</label><input type="text" name="tests_done" class="form-control" value="{{ treatment.tests_done if treatment }}"></div>
+    </div>
+    <div class="mb-3"><label class="form-label">Diagnosis</label><textarea name="diagnosis" class="form-control" rows="3" required>{{ treatment.diagnosis if treatment }}</textarea></div>
+    <div class="mb-3"><label class="form-label">Prescription (General Notes)</label><textarea name="prescription" class="form-control" rows="3" required>{{ treatment.prescription if treatment }}</textarea></div>
+    
+    <div id="medicines-container">
+        <label class="form-label">Medicines</label>
+        <!-- Loop to display existing medicines -->
+        {% if treatment and treatment.medicines %}
+            {% for med in treatment.medicines %}
+            <div class="input-group mb-2">
+                <input type="text" name="medicine_name" class="form-control" placeholder="Medicine Name" value="{{ med.name }}">
+                <input type="text" name="medicine_dosage" class="form-control" placeholder="Dosage (e.g., 1-0-1)" value="{{ med.dosage }}">
+                <button type="button" class="btn btn-outline-danger" onclick="this.parentElement.remove()">Remove</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <button type="button" id="add-medicine" class="btn btn-secondary btn-sm mb-3">Add Medicine</button>
+    
+    <hr>
+    <button type="submit" class="btn btn-primary">Save and Mark as Complete</button>
+</form>
+
+<script>
+document.getElementById('add-medicine').addEventListener('click', function() {
+    const container = document.getElementById('medicines-container');
+    const medicineRow = document.createElement('div');
+    medicineRow.className = 'input-group mb-2';
+    medicineRow.innerHTML = \`
+        <input type="text" name="medicine_name" class="form-control" placeholder="Medicine Name">
+        <input type="text" name="medicine_dosage" class="form-control" placeholder="Dosage (e.g., 1-0-1)">
+        <button type="button" class="btn btn-outline-danger" onclick="this.parentElement.remove()">Remove</button>
+    \`;
+    container.appendChild(medicineRow);
+});
+</script>
+{% endblock %}

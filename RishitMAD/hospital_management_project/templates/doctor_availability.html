@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Set Availability{% endblock %}
+{% block content %}
+<h2>Set Your Availability for the Next 7 Days</h2>
+<p>Time schedule is fixed for Morning (08:00 AM - 12:00 PM) and Evening (04:00 PM - 09:00 PM).</p>
+<form method="POST">
+    {% for day in week_dates %}
+    {% set day_str = day.strftime('%Y-%m-%d') %}
+    <div class="card mb-3">
+        <div class="card-header">{{ day.strftime('%A, %d/%m/%Y') }}</div>
+        <div class="card-body">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="{{ day_str }}" value="morning" id="morning_{{ day_str }}"
+                {% if current_availability.get(day_str) and 'morning' in current_availability[day_str] %}checked{% endif %}>
+                <label class="form-check-label" for="morning_{{ day_str }}">Morning (8am - 12pm)</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="{{ day_str }}" value="evening" id="evening_{{ day_str }}"
+                {% if current_availability.get(day_str) and 'evening' in current_availability[day_str] %}checked{% endif %}>
+                <label class="form-check-label" for="evening_{{ day_str }}">Evening (4pm - 9pm)</label>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Save Availability</button>
+</form>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Patient History{% endblock %}
+{% block content %}
+    <h2>Treatment History for {{ patient.name }}</h2>
+    {% for appointment in appointments %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Visit No. {{ loop.index }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Appointment on {{ appointment.date.strftime('%d/%m/%Y') }} with Dr. {{ appointment.doctor.name }}</h6>
+                <hr>
+                <p><strong>Visit Type:</strong> {{ appointment.treatment.visit_type or 'N/A' }}</p>
+                <p><strong>Tests Done:</strong> {{ appointment.treatment.tests_done or 'N/A' }}</p>
+                <p><strong>Diagnosis:</strong> {{ appointment.treatment.diagnosis }}</p>
+                <p><strong>Prescription:</strong> {{ appointment.treatment.prescription }}</p>
+                <p><strong>Notes:</strong> {{ appointment.treatment.notes }}</p>
+                {% if appointment.treatment.medicines %}
+                    <h6>Medicines Prescribed:</h6>
+                    <ul>
+                        {% for med in appointment.treatment.medicines %}
+                            <li>{{ med.name }} - {{ med.dosage }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <p>No past treatment records found for this patient.</p>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<h2>Edit Your Profile</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        <input type="text" id="name" name="name" class="form-control" value="{{ patient.name }}" required minlength="2">
+    </div>
+    <div class="mb-3">
+        <label for="contact" class="form-label">Contact Information</label>
+        <input type="text" id="contact" name="contact" class="form-control" value="{{ patient.contact }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Profile</button>
+</form>
+{% endblock %}

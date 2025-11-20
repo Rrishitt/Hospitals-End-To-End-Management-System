@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment with Dr. {{ doctor.name }}{% endblock %}
+{% block content %}
+<h2>Doctor's Availability</h2>
+<p>Green slots are available. Red slots are booked. Please select a time to book.</p>
+<form method="POST" action="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}">
+    <div class="availability-grid">
+        {% for day in week_dates %}
+        {% set day_str = day.strftime('%Y-%m-%d') %}
+        <div class="day-row">
+            <div class="date-label">{{ day.strftime('%d/%m/%Y') }}</div>
+            {% set available_slots = availability.get(day_str, []) %}
+            <!-- Morning Slot -->
+            {% set slot_id = day_str + '_morning' %}
+            {% set is_available = 'morning' in available_slots %}
+            {% set is_booked = slot_id in booked_slots %}
+            <div class="slot">
+                {% if is_available and not is_booked %}
+                <button type="submit" name="slot" value="{{ day_str }}_09:00" class="btn btn-success w-100">08:00 - 12:00 am</button>
+                {% else %}
+                <button type="button" class="btn btn-danger w-100" disabled>08:00 - 12:00 am</button>
+                {% endif %}
+            </div>
+            <!-- Evening Slot -->
+            {% set slot_id = day_str + '_evening' %}
+            {% set is_available = 'evening' in available_slots %}
+            {% set is_booked = slot_id in booked_slots %}
+            <div class="slot">
+                {% if is_available and not is_booked %}
+                <button type="submit" name="slot" value="{{ day_str }}_16:00" class="btn btn-success w-100">04:00 - 09:00 pm</button>
+                {% else %}
+                <button type="button" class="btn btn-danger w-100" disabled>04:00 - 09:00 pm</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</form>
+<style>
+    .availability-grid .day-row { display: flex; align-items: center; margin-bottom: 10px; }
+    .availability-grid .date-label { flex: 1; font-weight: bold; }
+    .availability-grid .slot { flex: 2; margin: 0 5px; }
+</style>
+{% endblock %}
